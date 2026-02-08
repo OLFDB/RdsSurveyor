@@ -25,6 +25,7 @@
 
 package eu.jacquet80.rds;
 
+import java.awt.Taskbar;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -157,7 +158,14 @@ public class RDSSurveyor {
 			m = applicationInstance.getClass().getMethod("setDockIconImage", java.awt.Image.class);
 			m.invoke(applicationInstance, Image.ICON);
 		} catch(Exception e) {}
-		
+
+			
+		// Dock icon for MacOS X
+		try {
+			final Taskbar taskbar = Taskbar.getTaskbar();
+			taskbar.setIconImage(Image.ICON);
+		} catch(Exception e) {}
+	
 		
 		if(args.length != 0) {
 			// if arguments are provided, RDS Surveyor was launched from the
