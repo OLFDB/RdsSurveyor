@@ -175,11 +175,11 @@ public class RDSSurveyor {
 		    bGr.drawImage(Image.ICON, 0, 0, null);
 		    bGr.dispose();
 			
-			BufferedImage dockimage = new BufferedImage(bimg.getWidth() + 120, bimg.getHeight() + 120, bimg.getType());
+			BufferedImage dockimage = new BufferedImage(bimg.getWidth() + 100, bimg.getHeight() + 100, bimg.getType());
 			Graphics dg = dockimage.getGraphics();
 			dg.setColor(Color.white);
-			dg.fillRoundRect(30,30,bimg.getWidth() + 60, bimg.getHeight()+ 60, 140, 140 );
-			dg.drawImage(bimg, 60, 60, null);
+			dg.fillRoundRect(25,25,bimg.getWidth() + 50, bimg.getHeight()+ 50, 140, 140 );
+			dg.drawImage(bimg, 50, 50, null);
 			dg.dispose();
 			taskbar.setIconImage(dockimage);
 		} catch(Exception e) {}
