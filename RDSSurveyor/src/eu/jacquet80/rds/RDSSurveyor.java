@@ -25,6 +25,11 @@
 
 package eu.jacquet80.rds;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Taskbar;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +60,7 @@ import eu.jacquet80.rds.input.AudioFileBitReader;
 import eu.jacquet80.rds.input.BinStringFileBitReader;
 import eu.jacquet80.rds.input.BinaryFileBitReader;
 import eu.jacquet80.rds.input.BitReader;
+import eu.jacquet80.rds.input.DABRadioTunerGroupReader;
 import eu.jacquet80.rds.input.FileFormatGuesser;
 import eu.jacquet80.rds.input.GnsGroupReader;
 import eu.jacquet80.rds.input.GroupReader;
@@ -158,6 +164,25 @@ public class RDSSurveyor {
 			m.invoke(applicationInstance, Image.ICON);
 		} catch(Exception e) {}
 		
+		// Dock icon for MacOS X
+		try {
+			final Taskbar taskbar = Taskbar.getTaskbar();
+			
+			while(Image.ICON.getWidth(null)== -1) {}
+			
+			BufferedImage bimg = new BufferedImage(Image.ICON.getWidth(null), Image.ICON.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		    Graphics2D bGr = bimg.createGraphics();
+		    bGr.drawImage(Image.ICON, 0, 0, null);
+		    bGr.dispose();
+			
+			BufferedImage dockimage = new BufferedImage(bimg.getWidth() + 120, bimg.getHeight() + 120, bimg.getType());
+			Graphics dg = dockimage.getGraphics();
+			dg.setColor(Color.white);
+			dg.fillRoundRect(30,30,bimg.getWidth() + 60, bimg.getHeight()+ 60, 140, 140 );
+			dg.drawImage(bimg, 60, 60, null);
+			dg.dispose();
+			taskbar.setIconImage(dockimage);
+		} catch(Exception e) {}
 		
 		if(args.length != 0) {
 			// if arguments are provided, RDS Surveyor was launched from the
@@ -201,8 +226,11 @@ public class RDSSurveyor {
 				} else if("-intuner".equals(args[i])) {
 					reader = new NativeTunerGroupReader(getParam("intuner", args, ++i));
 					liveGroupInput = true;
-				} else if("-insdr".equals(args[i])) {
-					reader = new SdrGroupReader(console, getParam("insdr", args, ++i));
+				} else if("-indabtuner".equals(args[i])) {
+					reader = new DABRadioTunerGroupReader(getParam("intuner", args, ++i));
+					liveGroupInput = true;
+				}else if("-insdr".equals(args[i])) {
+					reader = new SdrGroupReader(console, getParam("indabtuner", args, ++i));
 					liveGroupInput = true;
 				} else if("-inmpxwav".equals(args[i])) {
 					File f = new File(getParam("inmpxwav", args, ++i));
@@ -292,6 +320,7 @@ public class RDSSurveyor {
 					System.out.println("  -infile <file>           Use the given file as input (autodetect format)");
 					System.out.println("  -inv4l <device>          Reads from Video4Linux device, e.g. /dev/radio");
 					System.out.println("  -intuner <driver>        Reads from a native tuner, specify driver (.so, .dll, .dylib)");
+					System.out.println("  -indabtuner <driver>     Reads from a BLE dab tuner in FM mode, specify the BLE device name");
 					System.out.println("  -insdr <driver>          Reads from an SDR, specify driver (.so, .dll, .dylib)");
 					System.out.println("  -ingns <port>            Reads from a GNS TMC tuner, specify port (tty*, COM*)");
 					System.out.println("  -invert / -noinvert      Force bit inversion (default: auto-detect");
