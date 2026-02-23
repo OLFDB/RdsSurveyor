@@ -45,7 +45,7 @@ Go to http://rds-surveyor.jacquet.xyz/download/.
 
 #### Compiling
 
-To compile and the main program, you need Java SE 7 or later and the Gradle build system version 8 or later. Go into the `RDSSurveyor` directory and run:
+To compile and the main program, you need Java SE 8 or later and the Gradle build system version 8 or later. Go into the `RDSSurveyor` directory and run:
 
 ```
 gradle jar
