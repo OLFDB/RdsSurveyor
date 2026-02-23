@@ -17,6 +17,7 @@ RDS Surveyor can use diverse data sources:
 * Video4Linux receivers which feature RDS,
 * data and clock signals (as output, for example, by a TDA 7330 receiver IC) and sampled by the sound card,
 * log files from itself or RDS Spy (both synchronized group data or unsynchronized bitstreams).
+* OLFsDABRadio in FM mode. It uses the Si4688-based ugreen DAB board and provides RDS data through BLE.
 
 ### Supported RDS features
 
@@ -44,7 +45,7 @@ Go to http://rds-surveyor.jacquet.xyz/download/.
 
 #### Compiling
 
-To compile and the main program, you need Java SE 7 or later and the Gradle build system version 4.6 or later. Go into the `RDSSurveyor` directory and run:
+To compile and the main program, you need Java SE 7 or later and the Gradle build system version 8 or later. Go into the `RDSSurveyor` directory and run:
 
 ```
 gradle jar
@@ -74,8 +75,15 @@ To use the Si470x or RTL-SDR backend, you need to reference the shared object fi
 
 * To input from Si470x on Linux: `java -jar rdssurveyor.jar -intuner si470x.so`.
 * To input from RTL-SDR on Mac: `java -jar rdssurveyor.jar -insdr rtl.dylib`.
+* To input from OLFsDABRadio in FM mode: `java -jar rdssurveyor.jar -indabtuner DAB`.
 
 I advise you to create a directory called `log` to store your receive logs permanently. Then just run the program with `java -Djava.io.tmpdir=log -jar ...`.
+
+* To use location tables e.g. from Germany: `java -jar rdssurveyor.jar -insdr rtl.dylib -lt /Path/to/LCL22_deutsch` 
+
+  You can download the German list from here: [LCL22](https://www.bast.de/DE/Themen/Digitales/HF_1/Massnahmen/LCL/lcl-download.zip?__blob=publicationFile&v=2).
+
+
 
 ### Contributors
 
