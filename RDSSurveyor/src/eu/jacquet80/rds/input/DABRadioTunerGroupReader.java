@@ -28,15 +28,18 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 	Adapter adapter;
 	List<Peripheral> peripherals;
 	boolean bt_connected = false;
+	boolean scanning;
 
 	class ScanCallback implements Adapter.EventListener {
 		@Override
 		public void onScanStart() {
+			scanning=true;
 			System.out.println("Scan started.");
 		}
 
 		@Override
 		public void onScanStop() {
+			scanning=false;
 			System.out.println("Scan stopped.");
 		}
 
@@ -78,6 +81,7 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 				peripherals = null;
 				try {
 					adapter.scanFor(2000);
+					adapter.scanStop();
 				} catch (Exception e) {
 					System.err.println("Scan failed: " + e.getMessage());
 					System.exit(1);
@@ -89,12 +93,17 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 //					System.out.println(
 //							"[" + i + "] " + peripheral.getIdentifier() + " [" + peripheral.getAddress() + "]");
 					if (peripheral.getIdentifier().equals("DAB")) {
+						
+						//while(scanning);
+						
 						System.out.println("Found DAB device");
 
 						System.out.println("Connecting to " + peripheral.getIdentifier() + " ["
 								+ peripheral.getAddress() + "] using peri: " + peripheral);
 						peripheral.setEventListener(new PeripheralCallback());
 						peripheral.connect();
+						
+						bt_connected = true;
 
 						int rxchar = -1;
 						int txchar = -1;
@@ -131,7 +140,7 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 
 						System.out.println("Subscribing to notification on " + characteristicUuidrx);
 						peripheral.notify(serviceUuidRX, characteristicUuidrx, this);
-						bt_connected = true;
+						
 						break;
 					}
 				}
@@ -158,12 +167,12 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 			scanner.setName("ScanThread");
 			scanner.start();
 
-			while (!bt_connected) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-				}
-			}
+//			while (!bt_connected) {
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//				}
+//			}
 
 		} catch (UnsatisfiedLinkError e) {
 			throw new UnavailableInputMethod(filename + ": cannot use BLE device (" + e.getMessage() + ")");
@@ -182,6 +191,9 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 
 	@Override
 	public int setFrequency(int frequency) {
+		System.out.println("setFrequency: " + (frequency/10));
+		if(peripheral!=null)
+			peripheral.writeCommand(serviceUuidTX, characteristicUuidtx, ("tune" + (frequency/10)).getBytes());
 		return 0;
 	}
 
