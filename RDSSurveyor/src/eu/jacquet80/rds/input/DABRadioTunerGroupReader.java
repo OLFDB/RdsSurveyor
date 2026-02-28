@@ -33,13 +33,13 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 	class ScanCallback implements Adapter.EventListener {
 		@Override
 		public void onScanStart() {
-			scanning=true;
+			scanning = true;
 			System.out.println("Scan started.");
 		}
 
 		@Override
 		public void onScanStop() {
-			scanning=false;
+			scanning = false;
 			System.out.println("Scan stopped.");
 		}
 
@@ -93,16 +93,16 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 //					System.out.println(
 //							"[" + i + "] " + peripheral.getIdentifier() + " [" + peripheral.getAddress() + "]");
 					if (peripheral.getIdentifier().equals("DAB")) {
-						
-						//while(scanning);
-						
+
+						// while(scanning);
+
 						System.out.println("Found DAB device");
 
 						System.out.println("Connecting to " + peripheral.getIdentifier() + " ["
 								+ peripheral.getAddress() + "] using peri: " + peripheral);
 						peripheral.setEventListener(new PeripheralCallback());
 						peripheral.connect();
-						
+
 						bt_connected = true;
 
 						int rxchar = -1;
@@ -140,7 +140,7 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 
 						System.out.println("Subscribing to notification on " + characteristicUuidrx);
 						peripheral.notify(serviceUuidRX, characteristicUuidrx, this);
-						
+
 						break;
 					}
 				}
@@ -156,7 +156,7 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 	public DABRadioTunerGroupReader(String filename) throws UnavailableInputMethod {
 
 		try {
-			
+
 			Adapter.getAdapters();
 
 			adapter = Adapter.getAdapters().get(0);
@@ -167,12 +167,12 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 			scanner.setName("ScanThread");
 			scanner.start();
 
-//			while (!bt_connected) {
-//				try {
-//					Thread.sleep(100);
-//				} catch (InterruptedException e) {
-//				}
-//			}
+			while (!bt_connected) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+			}
 
 		} catch (UnsatisfiedLinkError e) {
 			throw new UnavailableInputMethod(filename + ": cannot use BLE device (" + e.getMessage() + ")");
@@ -191,9 +191,9 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 
 	@Override
 	public int setFrequency(int frequency) {
-		System.out.println("setFrequency: " + (frequency/10));
-		if(peripheral!=null)
-			peripheral.writeCommand(serviceUuidTX, characteristicUuidtx, ("tune" + (frequency/10)).getBytes());
+		System.out.println("setFrequency: " + (frequency / 10));
+		if (peripheral != null)
+			peripheral.writeCommand(serviceUuidTX, characteristicUuidtx, ("tune" + (frequency / 10)).getBytes());
 		return 0;
 	}
 
@@ -293,13 +293,13 @@ public class DABRadioTunerGroupReader extends TunerGroupReader implements Periph
 		}
 	}
 
-	private static String bytesToHex(byte[] bytes) {
-		StringBuilder sb = new StringBuilder();
-		for (byte b : bytes) {
-			sb.append(String.format("%02X ", b));
-		}
-		return sb.toString().trim();
-	}
+//	private static String bytesToHex(byte[] bytes) {
+//		StringBuilder sb = new StringBuilder();
+//		for (byte b : bytes) {
+//			sb.append(String.format("%02X ", b));
+//		}
+//		return sb.toString().trim();
+//	}
 
 	public static void main(String[] args) {
 		try {
