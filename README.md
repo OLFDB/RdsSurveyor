@@ -75,7 +75,7 @@ To use the Si470x or RTL-SDR backend, you need to reference the shared object fi
 
 * To input from Si470x on Linux: `java -jar rdssurveyor.jar -intuner si470x.so`.
 * To input from RTL-SDR on Mac: `java -jar rdssurveyor.jar -insdr rtl.dylib`.
-* To input from OLFsDABRadio in FM mode: `java -jar rdssurveyor.jar -indabtuner DAB`.
+* To input from [OLFsDABRadio](https://github.com/OLFDB/OLFsDABRadio) in FM mode: `java -jar rdssurveyor.jar -indabtuner DAB`.
 
 I advise you to create a directory called `log` to store your receive logs permanently. Then just run the program with `java -Djava.io.tmpdir=log -jar ...`.
 
