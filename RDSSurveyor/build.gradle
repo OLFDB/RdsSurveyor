@@ -59,6 +59,7 @@ task javadocJar(type: Jar) {
 }
 
 task sourcesJar(type: Jar) {
+duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   archiveClassifier = 'sources'
   from sourceSets.main.allSource
 }
